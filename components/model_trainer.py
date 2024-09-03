@@ -13,6 +13,7 @@ from utils.ml_utils.model.estimator import NetworkModel
 from utils.main_utils.utils import save_object,load_object
 from utils.main_utils.utils import load_numpy_array_data
 from utils.ml_utils.metric.classification_metric import get_classification_score
+from sklearn.model_selection import GridSearchCV
 
 
 
@@ -26,16 +27,46 @@ class ModelTrainer:
         except Exception as e:
             raise NetworkSecurityException(e,sys)
 
-    def perform_hyper_parameter_tunig(self):
-        pass
+    def perform_hyper_parameter_tunig(self, model, param_grid, X_train, y_train):
+        
+        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+
+        # Fit the model with the training data
+        grid_search.fit(X_train, y_train)
+
+        # Get the best estimator and parameters
+        best_estimator = grid_search.best_estimator_
+        best_params = grid_search.best_params_
+
+        return best_estimator, best_params
     
 
     def train_model(self,x_train,y_train):
         try:
+            param_grid = {
+            'n_estimators': [100, 200, 300],
+            'max_depth': [3, 4, 5],
+            'learning_rate': [0.01, 0.1, 0.2],
+            'subsample': [0.8, 0.9, 1.0]
+            }
+             # Initialize the XGBClassifier
             xgb_clf = XGBClassifier()
-            xgb_clf.fit(x_train,y_train)
-            return xgb_clf
+
+            # Initialize GridSearchCV with the model and parameter grid
+            grid_search = GridSearchCV(estimator=xgb_clf, param_grid=param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+
+            # Fit the model with the training data
+            grid_search.fit(x_train, y_train)
+
+            # Get the best estimator
+            best_xgb_clf = grid_search.best_estimator_
+
+            # Log the best parameters
+            logging.info(f"Best Parameters: {grid_search.best_params_}")
+
+            return best_xgb_clf
         except Exception as e:
+            logging.error(f"An error occurred during model training: {e}")
             raise e
     
     def initiate_model_trainer(self)->ModelTrainerArtifact:

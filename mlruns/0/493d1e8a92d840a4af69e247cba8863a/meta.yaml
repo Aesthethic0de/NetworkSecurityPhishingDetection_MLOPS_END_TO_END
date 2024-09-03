@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/mrsin/OneDrive/Desktop/NetworkSecurityPhisingDetection_MLOPS_END_TO_END/mlruns/0/493d1e8a92d840a4af69e247cba8863a/artifacts
+end_time: 1725348712497
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 493d1e8a92d840a4af69e247cba8863a
+run_name: traveling-lynx-804
+run_uuid: 493d1e8a92d840a4af69e247cba8863a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1725348708559
+status: 3
+tags: []
+user_id: mrsin
